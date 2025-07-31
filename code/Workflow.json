@@ -1,0 +1,1516 @@
+{
+    "name": "Integration Webhooks",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 2908487,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -42,
+                    "y": 2,
+                    "name": "Webhook triggered by Postman"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Déclencheur_pour_test"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "google-docs:getADocument",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 10448368
+            },
+            "mapper": {
+                "filter": "image",
+                "select": "dropdown",
+                "document": "/1333o2w0HprEVXg6nCc4chRII6FhgGawb/19rIBLFF9VeWTJufFkKSjDeafEiQymlts1n6w1NWhxCo",
+                "destination": "drive",
+                "includeTabsContent": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 299,
+                    "y": 9,
+                    "name": "Received Mail"
+                },
+                "restore": {
+                    "expect": {
+                        "filter": {
+                            "label": "Image"
+                        },
+                        "select": {
+                            "label": "By Dropdown"
+                        },
+                        "document": {
+                            "path": [
+                                "Make_révision",
+                                "Message_reçu"
+                            ]
+                        },
+                        "destination": {
+                            "label": "My Drive"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "Lecture_message_reçu (jerome.frasson.vsi@gmail.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Get Content of a Document",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "dropdown"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "includeTabsContent",
+                        "type": "boolean",
+                        "label": "Include Tabs Content",
+                        "required": true
+                    },
+                    {
+                        "name": "filter",
+                        "type": "select",
+                        "label": "Filter",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "image",
+                                "drawing",
+                                "chart"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "destination",
+                        "type": "select",
+                        "label": "Choose a Drive",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "drive",
+                                "share",
+                                "team"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "document",
+                        "type": "file",
+                        "label": "Document ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 12,
+            "module": "openai-gpt-3:messageAssistantAdvanced",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 10448534
+            },
+            "mapper": {
+                "assistantId": "asst_0jnNRiJzmqgjrHM0XSFmcLxK",
+                "role": "assistant",
+                "threadId": "thread_CYQl65SIDKr41qn5Njuelfxs",
+                "tools": [
+                    "file_search"
+                ],
+                "file_search_resources": "vs_688b9cf552ec8191b9699705de050c70",
+                "_func_MongoDB": {
+                    "method": "POST"
+                },
+                "message": "{{2.text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 627,
+                    "y": 14,
+                    "name": "AI  Assistant Lyra GPT + Vector store"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My OpenAI connection",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "assistantId": {
+                            "mode": "chose",
+                            "nested": [
+                                {
+                                    "name": "_func_MongoDB",
+                                    "label": "Function: MongoDB",
+                                    "type": "collection",
+                                    "help": "Find, insert and update documents in MongoDB",
+                                    "spec": [
+                                        {
+                                            "name": "url",
+                                            "label": "URL",
+                                            "type": "url",
+                                            "help": "URL to fetch the `MongoDB` outputs to submit to the Assistant.\nThe field is **required** in order for the tool to be called. Only `POST` HTTP method is currently supported.\nIf you specify this URL, the function will be automatically added to the **Tools** parameter."
+                                        },
+                                        {
+                                            "name": "method",
+                                            "label": "HTTP Method",
+                                            "type": "hidden",
+                                            "default": "POST",
+                                            "help": "The HTTP method to use for the tool call. If not specified, defaults to `POST`."
+                                        }
+                                    ]
+                                }
+                            ],
+                            "label": "Lyra_candidatures (gpt-4o)"
+                        },
+                        "role": {
+                            "label": "Assistant"
+                        },
+                        "model": {
+                            "mode": "chose"
+                        },
+                        "tools": {
+                            "mode": "chose"
+                        },
+                        "file_search_resources": {
+                            "mode": "chose",
+                            "label": "Fichiers_Lyra_candidatures"
+                        },
+                        "code_interpreter_resources": {
+                            "mode": "chose",
+                            "collapsed": true
+                        },
+                        "tool_choice": {
+                            "mode": "chose",
+                            "collapsed": true,
+                            "label": "Empty"
+                        },
+                        "response_format": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "truncation_strategy": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "_func_MongoDB": {
+                            "collapsed": true
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "assistantId",
+                        "type": "select",
+                        "label": "Assistant",
+                        "required": true
+                    },
+                    {
+                        "name": "role",
+                        "type": "select",
+                        "label": "Role",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "user",
+                                "assistant"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "threadId",
+                        "type": "text",
+                        "label": "Thread ID"
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model"
+                    },
+                    {
+                        "name": "tools",
+                        "type": "select",
+                        "label": "Tools",
+                        "multiple": true,
+                        "validate": {
+                            "enum": [
+                                "file_search",
+                                "code_interpreter"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "file_search_resources",
+                        "type": "select",
+                        "label": "File Search Resources"
+                    },
+                    {
+                        "name": "code_interpreter_resources",
+                        "type": "select",
+                        "label": "Code Interpreter Resources",
+                        "validate": {
+                            "maxItems": 20
+                        },
+                        "multiple": true
+                    },
+                    {
+                        "name": "tool_choice",
+                        "type": "select",
+                        "label": "Tool Choice",
+                        "validate": {
+                            "enum": [
+                                "none",
+                                "auto",
+                                "required",
+                                "file_search",
+                                "code_interpreter",
+                                "function"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "instructions",
+                        "type": "text",
+                        "label": "Instructions"
+                    },
+                    {
+                        "name": "max_prompt_tokens",
+                        "type": "uinteger",
+                        "label": "Max Prompt Tokens"
+                    },
+                    {
+                        "name": "max_completion_tokens",
+                        "type": "uinteger",
+                        "label": "Max Completion Tokens"
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "response_format",
+                        "type": "select",
+                        "label": "Response Format",
+                        "validate": {
+                            "enum": [
+                                "auto",
+                                "json_object",
+                                "text"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "truncation_strategy",
+                        "type": "select",
+                        "label": "Truncation Strategy",
+                        "validate": {
+                            "enum": [
+                                "auto",
+                                "last_messages"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "_func_MongoDB",
+                        "type": "collection",
+                        "label": "Function: MongoDB",
+                        "spec": [
+                            {
+                                "name": "url",
+                                "type": "url",
+                                "label": "URL"
+                            },
+                            {
+                                "name": "method",
+                                "type": "hidden",
+                                "label": "HTTP Method"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "message",
+                        "type": "text",
+                        "label": "Message",
+                        "required": true
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 16,
+            "module": "regexp:Replace",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "pattern": "【4:0†source】\n​",
+                "value": "",
+                "global": true,
+                "sensitive": true,
+                "multiline": false,
+                "singleline": false,
+                "text": "{{12.result}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1030,
+                    "y": 12,
+                    "name": "Text Parser to erase【4:1†source】artefacts"
+                },
+                "restore": {
+                    "expect": {
+                        "global": {
+                            "mode": "chose"
+                        },
+                        "sensitive": {
+                            "mode": "chose"
+                        },
+                        "multiline": {
+                            "mode": "chose"
+                        },
+                        "singleline": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "pattern",
+                        "type": "text",
+                        "label": "Pattern",
+                        "required": true
+                    },
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "New value"
+                    },
+                    {
+                        "name": "global",
+                        "type": "boolean",
+                        "label": "Global match",
+                        "required": true
+                    },
+                    {
+                        "name": "sensitive",
+                        "type": "boolean",
+                        "label": "Case sensitive",
+                        "required": true
+                    },
+                    {
+                        "name": "multiline",
+                        "type": "boolean",
+                        "label": "Multiline",
+                        "required": true
+                    },
+                    {
+                        "name": "singleline",
+                        "type": "boolean",
+                        "label": "Singleline",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 1416,
+                    "y": 4
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 5,
+                            "module": "google-docs:appendADocument",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 10448368
+                            },
+                            "mapper": {
+                                "choose": "dropdown",
+                                "destination": "drive",
+                                "document": "/1333o2w0HprEVXg6nCc4chRII6FhgGawb/1DYgk_yN0he89jyJFa0cSwcwnhwjTeg90f4Oywjvo7lc",
+                                "select": "document",
+                                "text": "{{12.result}}"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1931,
+                                    "y": -320,
+                                    "name": "AI Reply"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "Lecture_message_reçu (jerome.frasson.vsi@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "choose": {
+                                            "label": "By Dropdown"
+                                        },
+                                        "destination": {
+                                            "label": "My Drive"
+                                        },
+                                        "document": {
+                                            "path": [
+                                                "Make_révision",
+                                                "Réponse"
+                                            ]
+                                        },
+                                        "select": {
+                                            "label": "By appending to the body of document"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "choose",
+                                        "type": "select",
+                                        "label": "Select a Document",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "mapping",
+                                                "dropdown"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "destination",
+                                        "type": "select",
+                                        "label": "Choose a Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "document",
+                                        "type": "file",
+                                        "label": "Document ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "select",
+                                        "type": "select",
+                                        "label": "Insert a Paragraph",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "location",
+                                                "document",
+                                                "segment"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Appended Text",
+                                        "required": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 10,
+                            "module": "google-sheets:addRow",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 10448368
+                            },
+                            "mapper": {
+                                "mode": "select",
+                                "insertUnformatted": false,
+                                "valueInputOption": "USER_ENTERED",
+                                "insertDataOption": "INSERT_ROWS",
+                                "from": "drive",
+                                "spreadsheetId": "/1333o2w0HprEVXg6nCc4chRII6FhgGawb/1WcRnszerHchh9SE8NtQwRHt6WY3kjDgdG_EdHE081cg",
+                                "sheetId": "Feuille 1",
+                                "includesHeaders": true,
+                                "values": {
+                                    "0": "{{12.created_at}}",
+                                    "1": "{{12.thread_id}}",
+                                    "2": "{{12.id}}",
+                                    "3": "{{12.result}}"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1909,
+                                    "y": 0,
+                                    "name": "IA Reply with Time and Id"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "Lecture_message_reçu (jerome.frasson.vsi@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "mode": {
+                                            "label": "Search by path"
+                                        },
+                                        "insertUnformatted": {
+                                            "mode": "chose"
+                                        },
+                                        "valueInputOption": {
+                                            "mode": "chose",
+                                            "label": "User entered"
+                                        },
+                                        "insertDataOption": {
+                                            "mode": "chose",
+                                            "label": "Insert rows"
+                                        },
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "spreadsheetId": {
+                                            "path": [
+                                                "Make_révision",
+                                                "Réponse IA"
+                                            ]
+                                        },
+                                        "sheetId": {
+                                            "label": "Feuille 1"
+                                        },
+                                        "includesHeaders": {
+                                            "nested": [
+                                                {
+                                                    "name": "values",
+                                                    "label": "Values",
+                                                    "type": "collection",
+                                                    "spec": [
+                                                        {
+                                                            "name": "0",
+                                                            "label": "Timestamp (UTC+2) (A)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "1",
+                                                            "label": "Thread ID (B)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "2",
+                                                            "label": "Message ID (C)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "3",
+                                                            "label": "Text (D)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "4",
+                                                            "label": "(E)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "5",
+                                                            "label": "(F)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "6",
+                                                            "label": "(G)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "7",
+                                                            "label": "(H)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "8",
+                                                            "label": "(I)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "9",
+                                                            "label": "(J)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "10",
+                                                            "label": "(K)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "11",
+                                                            "label": "(L)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "12",
+                                                            "label": "(M)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "13",
+                                                            "label": "(N)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "14",
+                                                            "label": "(O)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "15",
+                                                            "label": "(P)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "16",
+                                                            "label": "(Q)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "17",
+                                                            "label": "(R)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "18",
+                                                            "label": "(S)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "19",
+                                                            "label": "(T)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "20",
+                                                            "label": "(U)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "21",
+                                                            "label": "(V)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "22",
+                                                            "label": "(W)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "23",
+                                                            "label": "(X)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "24",
+                                                            "label": "(Y)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "25",
+                                                            "label": "(Z)",
+                                                            "type": "text"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "label": "Yes"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "mode",
+                                        "type": "select",
+                                        "label": "Search Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "select",
+                                                "fromAll",
+                                                "map"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "insertUnformatted",
+                                        "type": "boolean",
+                                        "label": "Unformatted",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "valueInputOption",
+                                        "type": "select",
+                                        "label": "Value input option",
+                                        "validate": {
+                                            "enum": [
+                                                "USER_ENTERED",
+                                                "RAW"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "insertDataOption",
+                                        "type": "select",
+                                        "label": "Insert data option",
+                                        "validate": {
+                                            "enum": [
+                                                "INSERT_ROWS",
+                                                "OVERWRITE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "spreadsheetId",
+                                        "type": "file",
+                                        "label": "Spreadsheet ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "sheetId",
+                                        "type": "select",
+                                        "label": "Sheet Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "includesHeaders",
+                                        "type": "select",
+                                        "label": "Table contains headers",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                true,
+                                                false
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "values",
+                                        "type": "collection",
+                                        "label": "Values",
+                                        "spec": [
+                                            {
+                                                "name": "0",
+                                                "type": "text",
+                                                "label": "Timestamp (UTC+2) (A)"
+                                            },
+                                            {
+                                                "name": "1",
+                                                "type": "text",
+                                                "label": "Thread ID (B)"
+                                            },
+                                            {
+                                                "name": "2",
+                                                "type": "text",
+                                                "label": "Message ID (C)"
+                                            },
+                                            {
+                                                "name": "3",
+                                                "type": "text",
+                                                "label": "Text (D)"
+                                            },
+                                            {
+                                                "name": "4",
+                                                "type": "text",
+                                                "label": "(E)"
+                                            },
+                                            {
+                                                "name": "5",
+                                                "type": "text",
+                                                "label": "(F)"
+                                            },
+                                            {
+                                                "name": "6",
+                                                "type": "text",
+                                                "label": "(G)"
+                                            },
+                                            {
+                                                "name": "7",
+                                                "type": "text",
+                                                "label": "(H)"
+                                            },
+                                            {
+                                                "name": "8",
+                                                "type": "text",
+                                                "label": "(I)"
+                                            },
+                                            {
+                                                "name": "9",
+                                                "type": "text",
+                                                "label": "(J)"
+                                            },
+                                            {
+                                                "name": "10",
+                                                "type": "text",
+                                                "label": "(K)"
+                                            },
+                                            {
+                                                "name": "11",
+                                                "type": "text",
+                                                "label": "(L)"
+                                            },
+                                            {
+                                                "name": "12",
+                                                "type": "text",
+                                                "label": "(M)"
+                                            },
+                                            {
+                                                "name": "13",
+                                                "type": "text",
+                                                "label": "(N)"
+                                            },
+                                            {
+                                                "name": "14",
+                                                "type": "text",
+                                                "label": "(O)"
+                                            },
+                                            {
+                                                "name": "15",
+                                                "type": "text",
+                                                "label": "(P)"
+                                            },
+                                            {
+                                                "name": "16",
+                                                "type": "text",
+                                                "label": "(Q)"
+                                            },
+                                            {
+                                                "name": "17",
+                                                "type": "text",
+                                                "label": "(R)"
+                                            },
+                                            {
+                                                "name": "18",
+                                                "type": "text",
+                                                "label": "(S)"
+                                            },
+                                            {
+                                                "name": "19",
+                                                "type": "text",
+                                                "label": "(T)"
+                                            },
+                                            {
+                                                "name": "20",
+                                                "type": "text",
+                                                "label": "(U)"
+                                            },
+                                            {
+                                                "name": "21",
+                                                "type": "text",
+                                                "label": "(V)"
+                                            },
+                                            {
+                                                "name": "22",
+                                                "type": "text",
+                                                "label": "(W)"
+                                            },
+                                            {
+                                                "name": "23",
+                                                "type": "text",
+                                                "label": "(X)"
+                                            },
+                                            {
+                                                "name": "24",
+                                                "type": "text",
+                                                "label": "(Y)"
+                                            },
+                                            {
+                                                "name": "25",
+                                                "type": "text",
+                                                "label": "(Z)"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 11,
+                            "module": "google-sheets:addRow",
+                            "version": 2,
+                            "parameters": {
+                                "__IMTCONN__": 10448368
+                            },
+                            "mapper": {
+                                "mode": "select",
+                                "insertUnformatted": false,
+                                "valueInputOption": "USER_ENTERED",
+                                "insertDataOption": "INSERT_ROWS",
+                                "from": "drive",
+                                "spreadsheetId": "/1333o2w0HprEVXg6nCc4chRII6FhgGawb/1W_dqccDeUBkkflVxvel0fl1EJG5No9VvmoUSWaCIdDg",
+                                "sheetId": "Feuille 1",
+                                "includesHeaders": true,
+                                "values": {
+                                    "0": "{{12.created_at}}",
+                                    "1": "{{12.thread_id}}",
+                                    "2": "{{2.documentId}}",
+                                    "3": "{{2.text}}"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 1907,
+                                    "y": 336,
+                                    "name": "Received Mail with Time and Id"
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "label": "Lecture_message_reçu (jerome.frasson.vsi@gmail.com)",
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "google"
+                                            }
+                                        }
+                                    },
+                                    "expect": {
+                                        "mode": {
+                                            "label": "Search by path"
+                                        },
+                                        "insertUnformatted": {
+                                            "mode": "chose"
+                                        },
+                                        "valueInputOption": {
+                                            "mode": "chose",
+                                            "label": "User entered"
+                                        },
+                                        "insertDataOption": {
+                                            "mode": "chose",
+                                            "label": "Insert rows"
+                                        },
+                                        "from": {
+                                            "label": "My Drive"
+                                        },
+                                        "spreadsheetId": {
+                                            "path": [
+                                                "Make_révision",
+                                                "Message entrant"
+                                            ]
+                                        },
+                                        "sheetId": {
+                                            "label": "Feuille 1"
+                                        },
+                                        "includesHeaders": {
+                                            "nested": [
+                                                {
+                                                    "name": "values",
+                                                    "label": "Values",
+                                                    "type": "collection",
+                                                    "spec": [
+                                                        {
+                                                            "name": "0",
+                                                            "label": "Timestamp (UTC+2) (A)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "1",
+                                                            "label": "Thread ID (B)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "2",
+                                                            "label": "Message ID (C)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "3",
+                                                            "label": "Text (D)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "4",
+                                                            "label": "(E)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "5",
+                                                            "label": "(F)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "6",
+                                                            "label": "(G)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "7",
+                                                            "label": "(H)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "8",
+                                                            "label": "(I)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "9",
+                                                            "label": "(J)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "10",
+                                                            "label": "(K)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "11",
+                                                            "label": "(L)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "12",
+                                                            "label": "(M)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "13",
+                                                            "label": "(N)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "14",
+                                                            "label": "(O)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "15",
+                                                            "label": "(P)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "16",
+                                                            "label": "(Q)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "17",
+                                                            "label": "(R)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "18",
+                                                            "label": "(S)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "19",
+                                                            "label": "(T)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "20",
+                                                            "label": "(U)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "21",
+                                                            "label": "(V)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "22",
+                                                            "label": "(W)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "23",
+                                                            "label": "(X)",
+                                                            "type": "text"
+                                                        },
+                                                        {
+                                                            "name": "24",
+                                                            "label": "(Y)",
+                                                            "type": "text"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "label": "Yes"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:google",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "mode",
+                                        "type": "select",
+                                        "label": "Search Method",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "select",
+                                                "fromAll",
+                                                "map"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "insertUnformatted",
+                                        "type": "boolean",
+                                        "label": "Unformatted",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "valueInputOption",
+                                        "type": "select",
+                                        "label": "Value input option",
+                                        "validate": {
+                                            "enum": [
+                                                "USER_ENTERED",
+                                                "RAW"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "insertDataOption",
+                                        "type": "select",
+                                        "label": "Insert data option",
+                                        "validate": {
+                                            "enum": [
+                                                "INSERT_ROWS",
+                                                "OVERWRITE"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "from",
+                                        "type": "select",
+                                        "label": "Drive",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "drive",
+                                                "share",
+                                                "team"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "spreadsheetId",
+                                        "type": "file",
+                                        "label": "Spreadsheet ID",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "sheetId",
+                                        "type": "select",
+                                        "label": "Sheet Name",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "includesHeaders",
+                                        "type": "select",
+                                        "label": "Table contains headers",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                true,
+                                                false
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "values",
+                                        "type": "collection",
+                                        "label": "Values",
+                                        "spec": [
+                                            {
+                                                "name": "0",
+                                                "type": "text",
+                                                "label": "Timestamp (UTC+2) (A)"
+                                            },
+                                            {
+                                                "name": "1",
+                                                "type": "text",
+                                                "label": "Thread ID (B)"
+                                            },
+                                            {
+                                                "name": "2",
+                                                "type": "text",
+                                                "label": "Message ID (C)"
+                                            },
+                                            {
+                                                "name": "3",
+                                                "type": "text",
+                                                "label": "Text (D)"
+                                            },
+                                            {
+                                                "name": "4",
+                                                "type": "text",
+                                                "label": "(E)"
+                                            },
+                                            {
+                                                "name": "5",
+                                                "type": "text",
+                                                "label": "(F)"
+                                            },
+                                            {
+                                                "name": "6",
+                                                "type": "text",
+                                                "label": "(G)"
+                                            },
+                                            {
+                                                "name": "7",
+                                                "type": "text",
+                                                "label": "(H)"
+                                            },
+                                            {
+                                                "name": "8",
+                                                "type": "text",
+                                                "label": "(I)"
+                                            },
+                                            {
+                                                "name": "9",
+                                                "type": "text",
+                                                "label": "(J)"
+                                            },
+                                            {
+                                                "name": "10",
+                                                "type": "text",
+                                                "label": "(K)"
+                                            },
+                                            {
+                                                "name": "11",
+                                                "type": "text",
+                                                "label": "(L)"
+                                            },
+                                            {
+                                                "name": "12",
+                                                "type": "text",
+                                                "label": "(M)"
+                                            },
+                                            {
+                                                "name": "13",
+                                                "type": "text",
+                                                "label": "(N)"
+                                            },
+                                            {
+                                                "name": "14",
+                                                "type": "text",
+                                                "label": "(O)"
+                                            },
+                                            {
+                                                "name": "15",
+                                                "type": "text",
+                                                "label": "(P)"
+                                            },
+                                            {
+                                                "name": "16",
+                                                "type": "text",
+                                                "label": "(Q)"
+                                            },
+                                            {
+                                                "name": "17",
+                                                "type": "text",
+                                                "label": "(R)"
+                                            },
+                                            {
+                                                "name": "18",
+                                                "type": "text",
+                                                "label": "(S)"
+                                            },
+                                            {
+                                                "name": "19",
+                                                "type": "text",
+                                                "label": "(T)"
+                                            },
+                                            {
+                                                "name": "20",
+                                                "type": "text",
+                                                "label": "(U)"
+                                            },
+                                            {
+                                                "name": "21",
+                                                "type": "text",
+                                                "label": "(V)"
+                                            },
+                                            {
+                                                "name": "22",
+                                                "type": "text",
+                                                "label": "(W)"
+                                            },
+                                            {
+                                                "name": "23",
+                                                "type": "text",
+                                                "label": "(X)"
+                                            },
+                                            {
+                                                "name": "24",
+                                                "type": "text",
+                                                "label": "(Y)"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu2.make.com",
+        "notes": []
+    }
+}
