@@ -63,6 +63,9 @@ It is designed to be understandable by recruiters, engineers, and HR professiona
 
 ---
 
+**Original version built with n8n:** [Lyra_Recruiter_Agent_n8n](https://github.com/Jerome-openclassroom/Lyra_Recruiter_Agent_n8n)
+
+
 ## 📄 License
 
 Open for educational and demonstrative purposes. Attribution encouraged.
